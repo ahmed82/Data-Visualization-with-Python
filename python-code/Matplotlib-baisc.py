@@ -196,7 +196,7 @@ One of the core aspects of Matplotlib is matplotlib.pyplot. It is Matplotlib's s
 Let's start by importing Matplotlib and Matplotlib.pyplot as follows:"""
 
 # we are using the inline backend
-%matplotlib inline 
+# %matplotlib inline 
 
 import matplotlib as mpl
 import matplotlib.pyplot as plt
