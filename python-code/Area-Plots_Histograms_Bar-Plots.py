@@ -288,6 +288,191 @@ plt.xlabel('Number of Immigrants')
 
 plt.show()
 
+"""Tip: For a full listing of colors available in Matplotlib, run the following code 
+in your python shell:"""
+
+import matplotlib
+for name, hex in matplotlib.colors.cnames.items():
+    print(name, hex)
+# If we do no want the plots to overlap each other, we can stack them using the stacked paramemter. Let's also adjust the min and max x-axis labels to remove the extra gap on the edges of the plot. We can pass a tuple (min,max) using the xlim paramater, as show below.
+
+count, bin_edges = np.histogram(df_t, 15)
+xmin = bin_edges[0] - 10   #  first bin value is 31.0, adding buffer of 10 for aesthetic purposes 
+xmax = bin_edges[-1] + 10  #  last bin value is 308.0, adding buffer of 10 for aesthetic purposes
+
+# stacked Histogram
+df_t.plot(kind='hist',
+          figsize=(10, 6), 
+          bins=15,
+          xticks=bin_edges,
+          color=['coral', 'darkslateblue', 'mediumseagreen'],
+          stacked=True,
+          xlim=(xmin, xmax)
+         )
+
+plt.title('Histogram of Immigration from Denmark, Norway, and Sweden from 1980 - 2013')
+plt.ylabel('Number of Years')
+plt.xlabel('Number of Immigrants') 
+
+plt.show()
+
+"""Question: Use the scripting layer to display the immigration distribution for Greece, Albania, and Bulgaria for years 1980 - 2013? Use an overlapping plot with 15 bins and a transparency value of 0.35."""
+
+# create a dataframe of the countries of interest (cof)
+df_cof = df_can.loc[['Greece', 'Albania', 'Bulgaria'], years]
+
+# transpose the dataframe
+df_cof = df_cof.transpose() 
+
+# let's get the x-tick values
+count, bin_edges = np.histogram(df_cof, 15)
+
+# Un-stacked Histogram
+df_cof.plot(kind ='hist',
+            figsize=(10, 6),
+            bins=15,
+            alpha=0.35,
+            xticks=bin_edges,
+            color=['coral', 'darkslateblue', 'mediumseagreen']
+            )
+
+plt.title('Histogram of Immigration from Greece, Albania, and Bulgaria from 1980 - 2013')
+plt.ylabel('Number of Years')
+plt.xlabel('Number of Immigrants')
+
+plt.show()
+
+""" ############################# Bar Charts (Dataframe) ######################
+A bar plot is a way of representing data where the length of the bars represents the magnitude/size of the feature/variable. Bar graphs usually represent numerical and categorical variables grouped in intervals.
+
+To create a bar plot, we can pass one of two arguments via kind parameter in plot():
+
+    # kind=bar creates a vertical bar plot
+    # kind=barh creates a horizontal bar plot
+
+        Vertical bar plot
+
+In vertical bar graphs, the x-axis is used for labelling, and the length of bars on the y-axis corresponds to the magnitude of the variable being measured. Vertical bar graphs are particuarly useful in analyzing time series data. One disadvantage is that they lack space for text labelling at the foot of each bar.
+
+#   Let's start off by analyzing the effect of Iceland's Financial Crisis:
+
+The 2008 - 2011 Icelandic Financial Crisis was a major economic and political event in Iceland. Relative to the size of its economy, Iceland's systemic banking collapse was the largest experienced by any country in economic history. The crisis led to a severe economic depression in 2008 - 2011 and significant political unrest.
+
+Question: Let's compare the number of Icelandic immigrants (country = 'Iceland') to Canada from year 1980 to 2013."""
+
+# step 1: get the data
+df_iceland = df_can.loc['Iceland', years]
+df_iceland.head()
+
+# step 2: plot data
+df_iceland.plot(kind='bar', figsize=(10, 6))
+
+plt.xlabel('Year') # add to x-label to the plot
+plt.ylabel('Number of immigrants') # add y-label to the plot
+plt.title('Icelandic immigrants to Canada from 1980 to 2013') # add title to the plot
+
+plt.show()
+
+"""The bar plot above shows the total number of immigrants broken down by each year. We can clearly see the impact of the financial crisis; the number of immigrants to Canada started increasing rapidly after 2008.
+
+Let's annotate this on the plot using the annotate method of the scripting layer or the pyplot interface. We will pass in the following parameters:
+
+s: str, the text of annotation.
+xy: Tuple specifying the (x,y) point to annotate (in this case, end point of arrow).
+xytext: Tuple specifying the (x,y) point to place the text (in this case, start point of arrow).
+xycoords: The coordinate system that xy is given in - 'data' uses the coordinate system of the object being annotated (default).
+arrowprops: Takes a dictionary of properties to draw the arrow:
+arrowstyle: Specifies the arrow style, '->' is standard arrow.
+connectionstyle: Specifies the connection type. arc3 is a straight line.
+color: Specifes color of arror.
+lw: Specifies the line width.
+I encourage you to read the Matplotlib documentation for more details on annotations: http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.annotate."""
+
+
+df_iceland.plot(kind='bar', figsize=(10, 6), rot=90) # rotate the bars by 90 degrees
+
+plt.xlabel('Year')
+plt.ylabel('Number of Immigrants')
+plt.title('Icelandic Immigrants to Canada from 1980 to 2013')
+
+# Annotate arrow
+plt.annotate('',                      # s: str. Will leave it blank for no text
+             xy=(32, 70),             # place head of the arrow at point (year 2012 , pop 70)
+             xytext=(28, 20),         # place base of the arrow at point (year 2008 , pop 20)
+             xycoords='data',         # will use the coordinate system of the object being annotated 
+             arrowprops=dict(arrowstyle='->', connectionstyle='arc3', color='blue', lw=2)
+            )
+
+plt.show()
+
+"""Let's also annotate a text to go over the arrow. We will pass in the following additional parameters:
+
+        rotation:  rotation angle of text in degrees (counter clockwise)
+        va:        vertical alignment of text [‘center’ | ‘top’ | ‘bottom’ | ‘baseline’]
+        ha:        horizontal alignment of text [‘center’ | ‘right’ | ‘left’]
+"""
+df_iceland.plot(kind='bar', figsize=(10, 6), rot=90) 
+
+plt.xlabel('Year')
+plt.ylabel('Number of Immigrants')
+plt.title('Icelandic Immigrants to Canada from 1980 to 2013')
+
+# Annotate arrow
+plt.annotate('',                      # s: str. will leave it blank for no text
+             xy=(32, 70),             # place head of the arrow at point (year 2012 , pop 70)
+             xytext=(28, 20),         # place base of the arrow at point (year 2008 , pop 20)
+             xycoords='data',         # will use the coordinate system of the object being annotated 
+             arrowprops=dict(arrowstyle='->', connectionstyle='arc3', color='blue', lw=2)
+            )
+
+# Annotate Text
+plt.annotate('2008 - 2011 Financial Crisis', # text to display
+             xy=(28, 30),                    # start the text at at point (year 2008 , pop 30)
+             rotation=72.5,                  # based on trial and error to match the arrow
+             va='bottom',                    # want the text to be vertically 'bottom' aligned
+             ha='left',                      # want the text to be horizontally 'left' algned.
+            )
+
+plt.show()
+
+""" #############################  Horizontal Bar Plot
+
+Sometimes it is more practical to represent the data horizontally, especially if you need more room for labelling the bars. In horizontal bar graphs, the y-axis is used for labelling, and the length of bars on the x-axis corresponds to the magnitude of the variable being measured. As you will see, there is more room on the y-axis to label categetorical variables.
+
+Question: Using the scripting layter and the df_can dataset, create a horizontal bar plot showing the total number of immigrants to Canada from the top 15 countries, for the period 1980 - 2013. Label each country with the total immigrant count.
+
+Step 1: Get the data pertaining to the top 15 countries."""
+
+# sort dataframe on 'Total' column (descending)
+df_can.sort_values(by='Total', ascending=True, inplace=True)
+
+# get top 15 countries
+df_top15 = df_can['Total'].tail(15)
+df_top15
+
+
+"""
+Step 2: Plot data:
+
+Use kind='barh' to generate a bar chart with horizontal bars.
+Make sure to choose a good size for the plot and to label your axes and to give the plot a title.
+Loop through the countries and annotate the immigrant population using the anotate function of the scripting interface."""
+
+# generate plot
+df_top15.plot(kind='barh', figsize=(12, 12), color='steelblue')
+plt.xlabel('Number of Immigrants')
+plt.title('Top 15 Conuntries Contributing to the Immigration to Canada between 1980 - 2013')
+
+# annotate value labels to each country
+for index, value in enumerate(df_top15): 
+    label = format(int(value), ',') # format int with commas
+    
+    # place text at the end of bar (subtracting 47000 from x, and 0.1 from y to make it fit within the bar)
+    plt.annotate(label, xy=(value - 47000, index - 0.10), color='white')
+
+
+plt.show()
+
 
 
 
